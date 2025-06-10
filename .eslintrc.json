@@ -2,7 +2,8 @@
   "extends": ["next/core-web-vitals"],
   "rules": {
     "no-console": "off",
-    "security/detect-object-injection": "off"
+    "security/detect-object-injection": "off",
+    "@next/next/no-img-element": "off"
   },
   "ignorePatterns": ["node_modules/", ".next/", "out/"]
 } 
