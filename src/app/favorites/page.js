@@ -1,6 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useEffect } from "react";
+
 import Product from "../components/product";
 
 export default function FavoritesPage() {
@@ -70,5 +72,5 @@ export default function FavoritesPage() {
         </div>
       )}
     </div>
-  );  
+  );
 }

@@ -1,13 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+
 import Product from "../components/product";
 
 export default function CatalogPage() {
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+
   const searchParams = useSearchParams();
+
+  const [categoryId, setCategoryId] = useState(null);
+  const [subcategoryId, setSubcategoryId] = useState(null);
 
   const [cart, setCart] = useState(() => {
     if (typeof window !== "undefined") {
@@ -23,32 +28,30 @@ export default function CatalogPage() {
     return [];
   });
 
-  const [categoryId, setCategoryId] = useState(null);
-  const [subcategoryId, setSubcategoryId] = useState(null);
+  // ❗ Извлекаем параметры отдельно
+  const initialSearch = searchParams.get("search") || "";
+  const initialCategoryId = searchParams.get("categoryId");
+  const initialSubcategoryId = searchParams.get("subcategoryId");
 
   useEffect(() => {
-    const initialSearch = searchParams.get("search") || "";
-    const initialCategoryId = searchParams.get("categoryId");
-    const initialSubcategoryId = searchParams.get("subcategoryId");
-
     setSearchQuery(initialSearch);
     setCategoryId(initialCategoryId);
     setSubcategoryId(initialSubcategoryId);
 
     const fetchProducts = async () => {
       let url = `/api/products?search=${initialSearch}`;
-    
+
       if (initialCategoryId) {
         url += `&categoryId=${initialCategoryId}`;
       }
-    
+
       if (initialSubcategoryId) {
         url += `&subcategoryId=${initialSubcategoryId}`;
       }
-    
+
       const res = await fetch(url);
       const data = await res.json();
-    
+
       if (Array.isArray(data.products)) {
         setProducts(data.products);
       } else {
@@ -58,17 +61,17 @@ export default function CatalogPage() {
     };
 
     fetchProducts();
-  }, [searchParams]);
-
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    product.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  }, [initialSearch, initialCategoryId, initialSubcategoryId]); // ✅ только примитивные зависимости
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
     localStorage.setItem("favorites", JSON.stringify(favorites));
   }, [cart, favorites]);
+
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    product.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const addToCart = (product) => {
     setCart((prevCart) => {
@@ -78,9 +81,7 @@ export default function CatalogPage() {
   };
 
   const removeFromCart = (productId) => {
-    setCart((prevCart) => {
-      return prevCart.filter((item) => item.id !== productId);
-    });
+    setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
   };
 
   const addToFavorites = (product) => {
@@ -94,9 +95,9 @@ export default function CatalogPage() {
   };
 
   const removeFromFavorites = (product) => {
-    setFavorites((prevFavorites) => {
-      return prevFavorites.filter((item) => item.id !== product.id);
-    });
+    setFavorites((prevFavorites) =>
+      prevFavorites.filter((item) => item.id !== product.id)
+    );
   };
 
   return (
@@ -104,7 +105,7 @@ export default function CatalogPage() {
       <div className="container mx-auto w-full mt-5 px-4 sm:px-0 sm:mt-10">
         <h1 className="text-2xl font-bold mb-4">Каталог</h1>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        {filteredProducts.map((product) => (
+          {filteredProducts.map((product) => (
             <Product
               key={product.id}
               product={product}

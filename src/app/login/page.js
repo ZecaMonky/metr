@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export default function LoginPage() {
   const [form, setForm] = useState({
@@ -22,12 +22,12 @@ export default function LoginPage() {
     e.preventDefault()
     setError('')
     setSuccess('')
-  
+
     if (!form.identifier || !form.password) {
       setError('Пожалуйста, заполните все поля.')
       return
     }
-  
+
     try {
       const res = await fetch('/api/login', {
         method: 'POST',
@@ -35,20 +35,20 @@ export default function LoginPage() {
         body: JSON.stringify(form),
         credentials: 'include',
       })
-  
+
       const data = await res.json()
-  
+
       if (!res.ok) {
         throw new Error(data.error || 'Ошибка входа')
       }
-  
+
       setSuccess('Успешный вход!')
-  
+
       const check = await fetch('/api/me', {
         method: 'GET',
         credentials: 'include',
       })
-  
+
       if (check.ok) {
         const result = await check.json()
         console.log('Авторизован как:', result)
@@ -56,7 +56,7 @@ export default function LoginPage() {
       } else {
         console.log('Не авторизован')
       }
-  
+
       if (data.role === 'ADMIN') {
         router.push('/admin')
       } else {
@@ -66,16 +66,16 @@ export default function LoginPage() {
       setError(err.message || 'Что-то пошло не так...')
     }
   }
-  
+
 
   return (
     <div className="container mx-auto w-full mt-10 px-4 sm:px-0 sm:mt-30 sm:flex sm:justify-center">
       <div className="w-full max-w-md px-4 sm:px-6 py-10 sm:py-14 bg-white rounded-2xl shadow-md border border-gray-300">
         <h1 className="text-2xl sm:text-3xl font-bold mb-10 sm:mb-20 text-center">Вход</h1>
-  
+
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
         {success && <p className="text-green-600 text-sm mb-4">{success}</p>}
-  
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-1">
@@ -90,7 +90,7 @@ export default function LoginPage() {
               required
             />
           </div>
-  
+
           <div>
             <label className="block text-sm font-medium mb-1">Пароль</label>
             <input
@@ -102,7 +102,7 @@ export default function LoginPage() {
               required
             />
           </div>
-  
+
           <button
             type="submit"
             className="w-full bg-blue-600 text-white mt-6 py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
@@ -110,7 +110,7 @@ export default function LoginPage() {
             Войти
           </button>
         </form>
-  
+
         <div className="mt-4 text-center">
           <button
             onClick={() => router.push('/register')}

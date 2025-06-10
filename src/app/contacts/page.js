@@ -1,11 +1,12 @@
 'use client';
 
 import { Mail, Phone } from 'lucide-react';
+
 import YandexMap from '../components/YandexMap';
 
 export default function ContactPage() {
   return (
-    <div className="container mx-auto w-full mt-12 px-4 sm:px-0">
+    <div className="container mx-auto w-full my-16 px-4 sm:px-0">
       <h1 className="text-3xl font-bold mb-6 sm:mb-10">Контактная информация</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12">
@@ -35,7 +36,7 @@ export default function ContactPage() {
           <section>
             <h2 className="text-xl font-semibold mb-3">Реквизиты компании</h2>
             <p className="text-gray-700 leading-relaxed">
-              ООО "МЕТР"<br />
+              ООО &quot;МЕТР&quot;<br />
               ИНН 5609194270<br />
               КПП 560901001<br />
               ОГРН 1205600001485<br />

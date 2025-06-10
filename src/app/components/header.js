@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
 import { debounce } from "lodash";
+import Image from "next/image";
+import Link from 'next/link';
+import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +23,7 @@ const Header = () => {
         const res = await fetch('/api/me', {
           credentials: 'include',
         });
-  
+
         if (res.ok) {
           const data = await res.json();
           setUser(data);
@@ -35,7 +36,7 @@ const Header = () => {
         setLoadingUser(false);
       }
     };
-  
+
     fetchUser();
   }, []);
 
@@ -43,9 +44,9 @@ const Header = () => {
     const debouncedSearch = debounce((query) => {
       onSearch(query);
     }, 500);
-    
+
     debouncedSearch(searchQuery);
-    
+
     return () => {
       debouncedSearch.cancel();
     };
@@ -58,20 +59,20 @@ const Header = () => {
         if (!res.ok) {
           throw new Error('Network response was not ok');
         }
-  
+
         const data = await res.json();
-        
+
         if (Array.isArray(data) && data.length > 0) {
           setCategories(data);
         } else {
-          setCategories([]); 
+          setCategories([]);
         }
       } catch (error) {
         console.error("Ошибка при загрузке категорий:", error);
         setCategories([]);
       }
     };
-  
+
     fetchCategories();
   }, []);
 
@@ -81,7 +82,7 @@ const Header = () => {
     const query = e.target.value;
     setSearchQuery(query);
   };
-  
+
   const handleCatalogClick = () => {
     router.push("/catalog");
   };
@@ -136,20 +137,20 @@ const Header = () => {
     <header className="container mx-auto w-full bg-white py-6 px-4 sm:px-0 border-b-1 border-gray-300">
       <div className="hidden lg:flex justify-between items-center pb-2">
         <div className="flex space-x-4 text-xs text-neutral-600">
-          <a href="/support" className="hover:text-gray-500">Поддержка</a>
-          <a href="/contacts" className="hover:text-gray-500">Контакты</a>
+          <Link href="/support" className="hover:text-gray-500">Поддержка</Link>
+          <Link href="/contacts" className="hover:text-gray-500">Контакты</Link>
         </div>
         <div className="flex space-x-10 text-xs text-neutral-600">
           <div>пн - вс с 9:00 до 21:00</div>
-          <a href="tel:+73532430220">+7 (3532) 43‒02‒20</a>
+          <Link href="tel:+73532430220">+7 (3532) 43‒02‒20</Link>
         </div>
       </div>
 
       <div className="flex justify-between items-center gap-4 flex-wrap relative">
       <div className="flex items-center">
-        <a href="/">
+        <Link href="/">
           <Image src="/logo.png" alt="Логотип" width={130} height={35} />
-        </a>
+        </Link>
       </div>
 
         <div className="lg:hidden">
@@ -160,15 +161,15 @@ const Header = () => {
 
         {isOpen && (
           <div className="absolute top-32 left-0 w-full bg-white shadow-md z-20 pt-2 flex flex-col lg:hidden">
-            <a href="/catalog" className="py-2 px-4 text-gray-700 hover:bg-gray-100">Каталог</a>
-            <a href="/favorites" className="py-2 px-4 text-gray-700 hover:bg-gray-100">Избранное</a>
-            <a href="/cart" className="py-2 px-4 text-gray-700 hover:bg-gray-100">Корзина</a>
-            <a href="/support" className="py-2 px-4 text-gray-700 hover:bg-gray-100">Поддержка</a>
-            <a href="/contacts" className="py-2 px-4 text-gray-700 hover:bg-gray-100">Контакты</a>
-            
+            <Link href="/catalog" className="py-2 px-4 text-gray-700 hover:bg-gray-100">Каталог</Link>
+            <Link href="/favorites" className="py-2 px-4 text-gray-700 hover:bg-gray-100">Избранное</Link>
+            <Link href="/cart" className="py-2 px-4 text-gray-700 hover:bg-gray-100">Корзина</Link>
+            <Link href="/support" className="py-2 px-4 text-gray-700 hover:bg-gray-100">Поддержка</Link>
+            <Link href="/contacts" className="py-2 px-4 text-gray-700 hover:bg-gray-100">Контакты</Link>
+
             {loadingUser ? null : user ? (
               <>
-                <a href="/profile" className="py-2 px-4 text-gray-700 hover:bg-gray-100">Профиль</a>
+                <Link href="/profile" className="py-2 px-4 text-gray-700 hover:bg-gray-100">Профиль</Link>
                 <button
                   onClick={async () => {
                     await fetch('/api/logout', { method: 'POST', credentials: 'include' });
@@ -182,10 +183,10 @@ const Header = () => {
                 </button>
               </>
             ) : (
-              <a href="/login" className="py-2 px-4 text-gray-700 hover:bg-gray-100">Вход</a>
+              <Link href="/login" className="py-2 px-4 text-gray-700 hover:bg-gray-100">Вход</Link>
             )}
             <span className="py-2 px-4 text-gray-700">пн - вс с 9:00 до 21:00</span>
-            <a className="py-2 px-4 text-gray-700" href="tel:+73532430220">+7 (3532) 43‒02‒20</a>
+            <Link className="py-2 px-4 text-gray-700" href="tel:+73532430220">+7 (3532) 43‒02‒20</Link>
           </div>
         )}
 

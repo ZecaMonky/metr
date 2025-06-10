@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null)
@@ -12,12 +12,12 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const token = Cookies.get('authToken')
-  
+
     if (!token) {
       router.push('/login')
       return
     }
-  
+
     const fetchData = async () => {
       try {
         const profileRes = await fetch('/api/profile', {
@@ -25,29 +25,29 @@ export default function ProfilePage() {
             Authorization: `Bearer ${token}`,
           },
         })
-  
+
         const profileData = await profileRes.json()
-  
+
         if (!profileRes.ok || profileData.error) {
           throw new Error(profileData.error || 'Ошибка авторизации')
         }
-  
+
         setUser(profileData)
-  
+
         Cookies.set('user', JSON.stringify(profileData))
-  
+
         const ordersRes = await fetch('/api/orders/history', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
-  
+
         const ordersData = await ordersRes.json()
-  
+
         if (!ordersRes.ok || ordersData.error) {
           throw new Error(ordersData.error || 'Ошибка получения заказов')
         }
-  
+
         setOrders(ordersData)
       } catch (err) {
         console.error('Ошибка:', err.message)
@@ -57,7 +57,7 @@ export default function ProfilePage() {
         setLoading(false)
       }
     }
-  
+
     fetchData()
   }, [router])
 
@@ -79,7 +79,7 @@ export default function ProfilePage() {
         <div className="h-16 w-16 animate-spin rounded-full border-4 border-gray-400 border-t-transparent"></div>
       </div>
     );
-  }  
+  }
 
 
   return (

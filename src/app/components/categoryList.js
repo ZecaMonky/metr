@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import CategoryCard from './categoryCard';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import React, { useEffect, useState } from 'react';
 import { Autoplay, Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+import CategoryCard from './categoryCard';
+
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';

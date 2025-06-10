@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 export default function ImageUploadForm({ productId, onUploaded }) {
@@ -39,9 +40,9 @@ export default function ImageUploadForm({ productId, onUploaded }) {
   };
 
   return (
-    <div className="mt-4 space-y-4">
+    <div className="space-y-4">
       <div className="flex items-center gap-4">
-        <label className="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
+        <label className="cursor-pointer bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded transition-colors">
           Выберите файл
           <input
             type="file"
@@ -56,9 +57,11 @@ export default function ImageUploadForm({ productId, onUploaded }) {
 
       {preview && (
         <div className="mt-2">
-          <img
+          <Image
             src={preview}
             alt="preview"
+            width={192}
+            height={192}
             className="h-48 w-48 object-cover rounded border border-gray-300"
           />
         </div>

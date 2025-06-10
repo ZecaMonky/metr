@@ -48,17 +48,17 @@ export async function POST(req) {
 export async function DELETE(req) {
     try {
       const { id } = await req.json();
-  
+
       if (!id) {
         return new Response(JSON.stringify({ error: "Требуется ID" }), {
           status: 400,
         });
       }
-  
+
       await prisma.subcategory.delete({
         where: { id },
       });
-  
+
       return new Response(JSON.stringify({ success: true }), { status: 200 });
     } catch (error) {
       console.error("Ошибка при удалении подкатегории:", error);
@@ -68,19 +68,19 @@ export async function DELETE(req) {
       );
     }
   }
-  
+
 
   export async function PUT(req) {
     try {
       const { id, name, categoryId } = await req.json();
-  
+
       if (!id || !name) {
         return new Response(
           JSON.stringify({ error: "Требуются id и имя" }),
           { status: 400 }
         );
       }
-  
+
       const updated = await prisma.subcategory.update({
         where: { id },
         data: {
@@ -88,7 +88,7 @@ export async function DELETE(req) {
           ...(categoryId && { categoryId }),
         },
       });
-  
+
       return new Response(JSON.stringify(updated), { status: 200 });
     } catch (error) {
       console.error("Ошибка при обновлении подкатегории:", error);
@@ -98,4 +98,3 @@ export async function DELETE(req) {
       );
     }
   }
-  

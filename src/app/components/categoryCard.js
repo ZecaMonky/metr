@@ -33,7 +33,7 @@ const CategoryCard = ({
           src={imageSrc}
           alt={title}
           fill
-          className="object-contain"
+          className="object-contain z-12"
         />
       </div>
     </div>

@@ -5,6 +5,7 @@ cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
+  timeout: 30000
 });
 
 export async function POST(req) {
@@ -14,6 +15,10 @@ export async function POST(req) {
   if (!file) {
     return NextResponse.json({ error: "Файл не загружен" }, { status: 400 });
   }
+
+  if (!file.type.startsWith('image/')) {
+  return NextResponse.json({ error: "Только изображения разрешены" }, { status: 400 });
+}
 
   const buffer = Buffer.from(await file.arrayBuffer());
 

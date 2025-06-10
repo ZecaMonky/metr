@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { FaTrash, FaHeart, FaRegHeart } from 'react-icons/fa'
 import Cookies from 'js-cookie'
 import Image from "next/image";
+import Link from 'next/link';
+import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { FaTrash, FaHeart, FaRegHeart } from 'react-icons/fa'
 
 export default function CartPage() {
   const [deliveryMethod, setDeliveryMethod] = useState('Самовывоз');
@@ -47,7 +48,7 @@ export default function CartPage() {
         console.error("Ошибка при разборе user из cookie:", err);
       }
     }
-  }, []);
+  }, [router]);
 
   const updateCart = (newCart) => {
     setCart(newCart);
@@ -144,6 +145,20 @@ export default function CartPage() {
         throw new Error(data?.error || 'Ошибка оформления');
       }
 
+      await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user,
+          cart,
+          deliveryMethod,
+          deliveryAddress: formattedAddress,
+          total: getTotal()
+        })
+      });
+
       alert('Заказ оформлен! Спасибо за покупку 😊');
       updateCart([]);
     } catch (err) {
@@ -155,7 +170,7 @@ export default function CartPage() {
   return (
     <div className="container mx-auto w-full mt-5 px-4 sm:px-0 sm:mt-10">
       <h1 className="text-2xl font-bold mb-4">Корзина</h1>
-  
+
       {cart.length > 0 ? (
         <>
           <div className="flex flex-col lg:flex-row gap-8">
@@ -167,10 +182,10 @@ export default function CartPage() {
                 >
                   <div className="flex items-start">
                     <div className="w-24 h-24 relative mr-4">
-                      <Image
+                      <img
                         src={product.image || "/placeholder.png"}
                         alt={product.name}
-                        fill
+                        fill="true"
                         className="object-contain rounded-md"
                       />
                     </div>
@@ -179,14 +194,14 @@ export default function CartPage() {
                       <p className="text-sm text-gray-500">Артикул: {product.sku}</p>
                     </div>
                   </div>
-  
+
                   <div className="flex flex-col justify-center items-center">
                     <div className="flex items-center mb-1">
                       <button
                         onClick={() => updateQuantity(product.id, (product.quantity || 1) - 1)}
                         className="bg-gray-300 text-sky-700 px-2 py-1 rounded text-lg"
                       >
-                        - 
+                        -
                       </button>
                       <span className="mx-2">{product.quantity || 1}</span>
                       <button
@@ -200,12 +215,12 @@ export default function CartPage() {
                       {product.price.toLocaleString()} ₽ / шт
                     </span>
                   </div>
-  
+
                   <div className="flex items-center justify-end gap-4">
                     <span className="text-md font-semibold whitespace-nowrap">
                       {(product.price * (product.quantity || 1)).toLocaleString()} ₽
                     </span>
-  
+
                     <div className="flex flex-col gap-2">
                       <button
                         onClick={() => toggleFavorite(product)}
@@ -229,10 +244,10 @@ export default function CartPage() {
                   </div>
                 </div>
               ))}
-  
+
               <div className="mt-10">
                 <h2 className="text-xl font-semibold mb-4">Где и как вы хотите получить заказ?</h2>
-  
+
                 <div className="mb-4">
                   <label className="block font-semibold mb-2">Способ доставки:</label>
                   <select
@@ -244,7 +259,7 @@ export default function CartPage() {
                     <option>Доставка</option>
                   </select>
                 </div>
-  
+
                 {deliveryMethod === "Доставка" && (
                   <div className="mb-4">
                     <label className="block font-semibold mb-2">Адрес доставки:</label>
@@ -277,7 +292,7 @@ export default function CartPage() {
                         type="number"
                         value={apartmentNumber}
                         onChange={(e) => setApartmentNumber(e.target.value)}
-                        placeholder="Корпус*"
+                        placeholder="Квартира*"
                         className="border-1 border-gray-200 rounded px-3 py-2 w-full"
                       />
                     </div>
@@ -285,7 +300,7 @@ export default function CartPage() {
                 )}
               </div>
             </div>
-  
+
             <div className="w-full lg:w-[350px] flex-shrink-0">
               <div className="border-1 border-gray-200 rounded-lg p-6 shadow-md sticky top-20">
                 <h2 className="text-xl font-semibold mb-4">Ваш заказ</h2>
@@ -354,15 +369,15 @@ export default function CartPage() {
           <p className="text-gray-500 mb-4">
             Воспользуйтесь каталогом, чтобы найти всё, что вам нужно
           </p>
-          <a
+          <Link
             href="/catalog"
             className="px-6 py-3 text-white rounded-md bg-sky-600 hover:bg-sky-700 transition"
           >
             Вернуться к покупкам
-          </a>
+          </Link>
         </div>
       )}
     </div>
   );
-  
+
 }

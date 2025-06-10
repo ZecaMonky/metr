@@ -17,7 +17,7 @@ export default function AddProductForm() {
   const [editNames, setEditNames] = useState({});
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+ useEffect(() => {
     fetchCategories();
   }, []);
 
@@ -40,21 +40,15 @@ export default function AddProductForm() {
   const handleAddCategory = async () => {
     if (newCategory.trim()) {
       setLoading(true);
-      const formData = new FormData();
-      formData.append('name', newCategory);
-      if (categoryImage) {
-        formData.append('image', categoryImage);
-      }
-  
       const res = await fetch('/api/categories', {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newCategory }),
       });
-  
+
       const data = await res.json();
       setCategories([...categories, data]);
       setNewCategory('');
-      setCategoryImage(null);
       setLoading(false);
     }
   };
@@ -145,7 +139,7 @@ export default function AddProductForm() {
     <div className="flex flex-col lg:flex-row gap-8 mt-6 mx-auto">
       <form onSubmit={handleSubmit} className="flex-1 space-y-4">
         <h2 className="text-xl font-semibold mb-2">Добавление товара</h2>
-        <input type="text" placeholder="Название" value={name} onChange={(e) => setName(e.target.value)} className="border p-2 w-full" required />
+      <input type="text" placeholder="Название" value={name} onChange={(e) => setName(e.target.value)} className="border p-2 w-full" required />
         <textarea placeholder="Описание" value={description} onChange={(e) => setDescription(e.target.value)} className="border p-2 w-full" required />
         <input type="text" placeholder="Артикул (SKU)" value={sku} onChange={(e) => setSku(e.target.value)} className="border p-2 w-full" required />
         <input type="number" placeholder="Цена" value={price} onChange={(e) => setPrice(e.target.value)} className="border p-2 w-full" required />
@@ -170,7 +164,7 @@ export default function AddProductForm() {
           </select>
         )}
 
-        <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded w-full">
+        <button type="submit" className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded w-full">
           Добавить товар
         </button>
       </form>
@@ -180,7 +174,7 @@ export default function AddProductForm() {
 
         <div className="flex gap-2">
           <input type="text" placeholder="Новая категория" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} className="border p-2 w-full" />
-          <button type="button" onClick={handleAddCategory} disabled={loading} className="bg-blue-600 text-white px-4 py-2 rounded">
+          <button type="button" onClick={handleAddCategory} disabled={loading} className="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded">
             Добавить
           </button>
         </div>
@@ -210,7 +204,7 @@ export default function AddProductForm() {
           <>
             <div className="flex gap-2">
               <input type="text" placeholder="Новая подкатегория" value={newSubcategory} onChange={(e) => setNewSubcategory(e.target.value)} className="border p-2 w-full" />
-              <button type="button" onClick={handleAddSubcategory} disabled={loading} className="bg-blue-600 text-white px-4 py-2 rounded">
+              <button type="button" onClick={handleAddSubcategory} disabled={loading} className="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded">
                 Добавить
               </button>
             </div>

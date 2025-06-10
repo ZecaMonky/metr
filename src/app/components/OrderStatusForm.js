@@ -41,11 +41,13 @@ export default function OrderStatusForm({ orderId, currentStatus }) {
         <option value="Собирается">Собирается</option>
         <option value="Отправлено">Отправлено</option>
         <option value="Доставлено">Доставлено</option>
+        <option value="Выдача">Выдаётся</option>
         <option value="Отменено">Отменено</option>
+        <option value="Завершено">Завершено</option>
       </select>
       <button
         type="submit"
-        className="ml-2 bg-blue-500 text-white px-3 py-1 rounded text-sm"
+        className="ml-2 bg-sky-600 hover:bg-sky-700 text-white px-3 py-1 rounded text-sm"
         disabled={loading}
       >
         {loading ? "Обновление..." : "Обновить"}
