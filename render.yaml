@@ -2,7 +2,7 @@ services:
   - type: web
     name: metr
     env: node
-    buildCommand: npm install --legacy-peer-deps && npm run build
+    buildCommand: yarn install --production=false && npm run build
     startCommand: npm run start
     envVars:
       - key: NODE_ENV
