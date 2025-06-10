@@ -23,8 +23,8 @@ export async function GET(request) {
     let totalRevenue = 0;
     let totalItemsSold = 0;
     let weeklyOrders = 0;
-    const productSales = {};
-    const revenueByDate = {};
+    const productSales = new Map();
+    const revenueByDate = new Map();
 
     orders.forEach(order => {
       const orderDate = new Date(order.createdAt);
@@ -39,10 +39,12 @@ export async function GET(request) {
         orderTotal += itemRevenue;
 
         const productName = item.product.name;
-        productSales[productName] = (productSales[productName] || 0) + item.quantity;
+        const currentQuantity = productSales.get(productName) || 0;
+        productSales.set(productName, currentQuantity + item.quantity);
       });
 
-      revenueByDate[dateKey] = (revenueByDate[dateKey] || 0) + orderTotal;
+      const currentRevenue = revenueByDate.get(dateKey) || 0;
+      revenueByDate.set(dateKey, currentRevenue + orderTotal);
 
       if (orderDate >= oneWeekAgo) {
         weeklyOrders++;
@@ -51,7 +53,8 @@ export async function GET(request) {
 
     const averageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
-    const topProductEntry = Object.entries(productSales).sort((a, b) => b[1] - a[1])[0];
+    const topProductEntry = Array.from(productSales.entries())
+      .sort((a, b) => b[1] - a[1])[0];
     const topProduct = topProductEntry
       ? { name: topProductEntry[0], quantity: topProductEntry[1] }
       : null;
@@ -64,7 +67,7 @@ export async function GET(request) {
         totalItemsSold,
         weeklyOrders,
         topProduct,
-        revenueByDate,
+        revenueByDate: Object.fromEntries(revenueByDate),
       }),
       {
         status: 200,
