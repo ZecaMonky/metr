@@ -7,10 +7,10 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-const banners = [
+const slides = [
   { id: 1, src: '/banner1.png', alt: 'Баннер 1' },
   { id: 2, src: '/banner2.png', alt: 'Баннер 2' },
-  { id: 3, src: '/banner1.png', alt: 'Баннер 3' },
+  { id: 3, src: '/banner3.png', alt: 'Баннер 3' },
 ];
 
 export default function BannerSlider() {
@@ -38,12 +38,12 @@ export default function BannerSlider() {
           }}
           className="custom-swiper"
         >
-          {banners.map((banner) => (
-            <SwiperSlide key={banner.id}>
+          {slides.map((slide) => (
+            <SwiperSlide key={slide.id}>
               <div className="w-full h-[170px] sm:h-[250px] lg:h-[500px] relative rounded-md sm:rounded-xl border border-gray-200 overflow-hidden">
                 <Image
-                  src={banner.src}
-                  alt={banner.alt}
+                  src={slide.src}
+                  alt={slide.alt}
                   fill
                   className="object-cover"
                   priority
